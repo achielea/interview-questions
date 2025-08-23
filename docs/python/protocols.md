@@ -5,7 +5,11 @@ nav_order: 6
 layout: default
 ---
 
+<!-- @formatter:off -->
 # Протоколи
+- TOC
+{:toc}
+<!-- @formatter:on -->
 
 ## Загальне
 
@@ -29,43 +33,41 @@ layout: default
 
 **Nominal subtyping**: підтип визначається через явне успадкування класів.
 
+<!-- @formatter:off -->
 ```python
 class Animal:
     pass
 
-
 class Dog(Animal):  # Dog — підтип Animal
     pass
 
-
 a: Animal = Dog()  # коректно
 ```
+<!-- @formatter:on -->
 
 Тут `Dog` є підтипом `Animal`, бо явно успадковує його.
 
 **Structural subtyping**: підтип визначається не ім’ям класу, а наявністю потрібних методів або
 атрибутів. Використовується _duck typing_ і протоколи (`Protocol`) з модуля `typing`.
 
+<!-- @formatter:off -->
 ```python
 from typing import Protocol
-
 
 class Quackable(Protocol):
     def quack(self) -> None:
         ...
 
-
 class Duck:
     def quack(self) -> None:
         print("Quack!")
 
-
 def make_it_quack(q: Quackable):
     q.quack()
 
-
 make_it_quack(Duck())  # Duck реалізує протокол → працює
 ```
+<!-- @formatter:off -->
 
 Тут `Duck` не успадковує `Quackable`, але все одно сумісний із його «структурою» → структурний
 підтип.
@@ -84,6 +86,7 @@ make_it_quack(Duck())  # Duck реалізує протокол → працює
   `sum()` тощо).
 * Iterable можна використовувати багато разів для створення нових iterator-ів.
 
+<!-- @formatter:off -->
 ```python
 class Iterable:
     def __init__(self, sequence):
@@ -92,10 +95,10 @@ class Iterable:
     def __iter__(self):
         return SequenceIterator(self.sequence)
 
-
 for value in Iterable([1, 2, 3, 4]):
     print(value)  # 1 2 3 4 
 ```
+<!-- @formatter:on -->
 
 ### Що таке `Iterator` у Python?
 
@@ -183,7 +186,6 @@ for value in Iterable([1, 2, 3, 4]):
             else:
                 raise StopIteration
     
-    
     for fib_number in FibonacciIterator():
         print(fib_number)  # 0 1 1 2 3 5 8 13 21 34
     ```
@@ -222,6 +224,7 @@ expressions).
   (`sum`, `list`, `next` і т.д.).
 * Генератори особливо корисні для **великих обсягів** даних або **нескінченних послідовностей**.
 
+<!-- @formatter:off -->
 ```python
 def fibonacci_generator(stop=10):
     current_fib, next_fib = 0, 1
@@ -230,9 +233,9 @@ def fibonacci_generator(stop=10):
         current_fib, next_fib = next_fib, current_fib + next_fib
         yield fib_number
 
-
 list(fibonacci_generator())  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 ```
+<!-- @formatter:on -->
 
 Тут після завершення циклу, функція автоматично викличе `StopIteration`.
 
@@ -300,21 +303,21 @@ print(next(squares_gen))  # 1
 ітерабельному об’єкту. Замість того, щоб писати цикл із `yield` вручну, можна використати  
 `yield from`.
 
+<!-- @formatter:off -->
 ```python
 def subgen():
     yield 1
     yield 2
     yield 3
 
-
 def main():
     yield 0
     yield from subgen()  # делегує генератору subgen
     yield 4
 
-
 print(list(main()))  # [0, 1, 2, 3, 4]
 ```
+<!-- @formatter:on -->
 
 Тут `main()` не пише цикл `for val in subgen(): yield val`, а просто використовує `yield from`.
 
@@ -326,12 +329,12 @@ print(list(main()))  # [0, 1, 2, 3, 4]
 повторні обходи, треба або зберігати дані в колекцію, або створювати новий генератор при кожній
 ітерації.
 
+<!-- @formatter:off -->
 ```python
 def gen():
     yield 1
     yield 2
     yield 3
-
 
 g = gen()
 
@@ -342,6 +345,7 @@ for _ in range(2):
     for val in gen():  # виклик gen() створює новий генератор
         print(val)  # [1, 2, 3]
 ```
+<!-- @formatter:on -->
 
 ### Навіщо потрібні методи `send()`, `throw()` і `close()`?
 
@@ -370,7 +374,6 @@ for _ in range(2):
       except ValueError:
           yield "Обробив ValueError"
   
-  
   g = gen()
   print(next(g))  # 1
   print(g.throw(ValueError))  # "Обробив ValueError"
@@ -385,7 +388,6 @@ for _ in range(2):
           yield 1
       finally:
           print("Генератор закрито")
-  
   
   g = gen()
   print(next(g))  # 1
@@ -412,9 +414,9 @@ for _ in range(2):
 * `__exit__(exc_type, exc_value, traceback)` – викликається в кінці блоку, навіть якщо сталася
   помилка. Використовується для прибирання (закриття файлів, з’єднань і т.д.).
 
+<!-- @formatter:off -->
 ```python
 from contextlib import contextmanager
-
 
 @contextmanager
 def my_context():
@@ -422,10 +424,10 @@ def my_context():
     yield "resource"  # тут виконується основна робота
     print("🔸 Виходимо з контексту")
 
-
 with my_context() as res:
     print("Використовуємо:", res)
 ```
+<!-- @formatter:on -->
 
 ### Навіщо потрібні контекстні менеджери?
 
@@ -614,9 +616,9 @@ await. Типові приклади: асинхронні HTTP-з’єднан�
 Таким чином, якщо мета — мати змінну послідовність, просто наслідування від `Sequence` недостатньо.
 Необхідно використовувати `MutableSequence` і реалізувати базові методи для зміни елементів.
 
+<!-- @formatter:off -->
 ```python
 from collections.abc import MutableSequence
-
 
 class MyList(MutableSequence):
     def __init__(self, data=None):
@@ -637,12 +639,12 @@ class MyList(MutableSequence):
     def insert(self, index, value):
         self._data.insert(index, value)
 
-
 ml = MyList([1, 2, 3])
 ml[0] = 10
 ml.append(4)
 print(list(ml))  # [10, 2, 3, 4]
 ```
+<!-- @formatter:on -->
 
 ### Що таке `Mapping` у Python?
 

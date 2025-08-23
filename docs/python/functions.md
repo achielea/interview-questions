@@ -1,11 +1,15 @@
 ---
 title: Функції
 parent: Python
-nav_order: 5
+nav_order: 4
 layout: default
 ---
 
+<!-- @formatter:off -->
 # Функції
+- TOC
+{:toc}
+<!-- @formatter:on -->
 
 ## Загальне
 

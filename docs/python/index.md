@@ -5,6 +5,8 @@ layout: default
 ---
 
 # Питання з Python
+- TOC
+{:toc}
 
 ## Загальне
 
